@@ -10,7 +10,7 @@ while (len != 0 && (ret = read (fd, buf, len)) != 0) {
       continue;
     perror ("read");
     break;
-}
+  }
   len -= ret;
   buf += ret;
 }
