@@ -20,6 +20,19 @@ CONFIG_DEBUG_MUTEXES=y
 CONFIG_DEBUG_ATOMIC_SLEEP=y
 CONFIG_FRAME_POINTER=y
 
+## For host folder sharing:-
+    CONFIG_NET_9P=y
+    CONFIG_NET_9P_VIRTIO=y
+    CONFIG_NET_9P_DEBUG=y (Optional)
+    CONFIG_9P_FS=y
+    CONFIG_9P_FS_POSIX_ACL=y
+    CONFIG_PCI=y
+    CONFIG_VIRTIO_PCI=y
+    
+    CONFIG_PCI=y
+    CONFIG_VIRTIO_PCI=y
+    CONFIG_PCI_HOST_GENERIC=y
+
 ### For sharing files between host & qemu. Info at below link.
 https://wiki.qemu.org/Documentation/9psetup
 https://superuser.com/questions/628169/how-to-share-a-directory-with-the-host-without-networking-in-qemu
