@@ -1,0 +1,31 @@
+## qemu cmd
+sudo qemu-system-x86_64 -kernel bzImage -hda hda-xfs.img -initrd ../initramfs.gz -append "root=/dev/sda console=ttyS0 nokaslr" --nographic -s -m 2G \
+-fsdev local,id=shared_test_dev,path=/local/mnt/workspace/rharjani/winpath/,security_model=none -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared
+
+## Another terminal
+gdb vmlinux -ex "file vmlinux" -ex "set arch i386:x86-64" -ex "target remote localhost:1234"
+
+## kernel config should have:-
+CONFIG_DEBUG_INFO
+CONFIG_DEBUG_KERNEL
+CONFIG_KGDB
+CONFIG_DEBUG_KERNEL=y
+CONFIG_DEBUG_INFO=y
+CONFIG_STACKTRACE=y
+CONFIG_DEBUG_LIST=y
+CONFIG_DEBUG_KMEMLEAK=y
+CONFIG_SLUB_DEBUG=y
+CONFIG_KMEMCHECK=y
+CONFIG_DEBUG_MUTEXES=y
+CONFIG_DEBUG_ATOMIC_SLEEP=y
+CONFIG_FRAME_POINTER=y
+
+### For sharing files between host & qemu. Info at below link.
+https://wiki.qemu.org/Documentation/9psetup
+https://superuser.com/questions/628169/how-to-share-a-directory-with-the-host-without-networking-in-qemu
+
+
+## References
+https://gist.github.com/hngouveia01/843a2202628c7d567dad0f657f8373aa
+http://ncmiller.github.io/2016/05/14/linux-and-qemu.html
+
