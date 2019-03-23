@@ -1,6 +1,14 @@
 ## qemu cmd
+(1 cpu)
 sudo qemu-system-x86_64 -kernel bzImage -hda hda-xfs.img -initrd ../initramfs.gz -append "root=/dev/sda console=ttyS0 nokaslr" --nographic -s -m 2G \
 -fsdev local,id=shared_test_dev,path=/local/mnt/workspace/rharjani/winpath/,security_model=none -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared
+
+(4 cpu "-smp 4")
+sudo qemu-system-x86_64 -kernel bzImage -hda hda-xfs.img -initrd ../initramfs.gz -append "root=/dev/sda console=ttyS0 nokaslr" --nographic -s -m 2G \
+-fsdev local,id=shared_test_dev,path=/local/mnt/workspace/rharjani/winpath/,security_model=none -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared -smp 4
+
+// check this via "cat /proc/cpuinfo"
+
 
 ## Another terminal
 gdb vmlinux -ex "file vmlinux" -ex "set arch i386:x86-64" -ex "target remote localhost:1234"
@@ -42,3 +50,5 @@ https://superuser.com/questions/628169/how-to-share-a-directory-with-the-host-wi
 https://gist.github.com/hngouveia01/843a2202628c7d567dad0f657f8373aa
 http://ncmiller.github.io/2016/05/14/linux-and-qemu.html
 
+## Qemu options
+https://wiki.gentoo.org/wiki/QEMU/Options
