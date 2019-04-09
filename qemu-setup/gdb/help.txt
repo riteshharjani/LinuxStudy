@@ -1,1 +1,12 @@
 https://ccrma.stanford.edu/~jos/stkintro/Useful_commands_gdb.html
+
+
+## To check the offset of any variable
+(gdb) p (int)&((struct ovl_inode)*0)->vfs_inode
+$32 = 0x20
+
+## To check value of any variable in struct
+(gdb) p ((struct ovl_inode)*0xffff888051df0008)->flags
+$33 = 0xb
+
+
