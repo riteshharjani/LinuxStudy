@@ -13,6 +13,10 @@ sudo qemu-system-x86_64 -kernel bzImage -hda hda-xfs.img -initrd ../initramfs.gz
 ## Another terminal
 gdb vmlinux -ex "file vmlinux" -ex "set arch i386:x86-64" -ex "target remote localhost:1234"
 
+## share host_shared folder
+mkdir host_shared
+mount -t 9p -o trans=virtio host_shared host_shared -oversion=9p2000.L
+
 ## kernel config should have:-
 CONFIG_DEBUG_INFO
 CONFIG_DEBUG_KERNEL
