@@ -1,10 +1,10 @@
 ## qemu cmd
 (1 cpu)
-sudo qemu-system-x86_64 -kernel bzImage -hda hda-xfs.img -initrd ../initramfs.gz -append "root=/dev/sda console=ttyS0 nokaslr" --nographic -s -m 2G \
+sudo qemu-system-x86_64 --enable-kvm -kernel bzImage -hda hda-xfs.img -initrd ../initramfs.gz -append "root=/dev/sda console=ttyS0 nokaslr" --nographic -s -m 2G \
 -fsdev local,id=shared_test_dev,path=/local/mnt/workspace/rharjani/winpath/,security_model=none -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared
 
 (4 cpu "-smp 4")
-sudo qemu-system-x86_64 -kernel bzImage -hda hda-xfs.img -initrd ../initramfs.gz -append "root=/dev/sda console=ttyS0 nokaslr" --nographic -s -m 2G \
+sudo qemu-system-x86_64 --enable-kvm -kernel bzImage -hda hda-xfs.img -initrd ../initramfs.gz -append "root=/dev/sda console=ttyS0 nokaslr" --nographic -s -m 2G \
 -fsdev local,id=shared_test_dev,path=/local/mnt/workspace/rharjani/winpath/,security_model=none -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared -smp 4
 
 // check this via "cat /proc/cpuinfo"
