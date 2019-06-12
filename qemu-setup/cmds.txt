@@ -2,6 +2,12 @@
 1. "gdb vmlinux -ex "file vmlinux" -ex "set arch i386:x86-64" -ex "target remote localhost:1234" -tui"
 2. sudo qemu-system-x86_64 --enable-kvm -kernel bootimages/bzImage -hda bootimages/hda-xfs_new.img -initrd bootimages/rootfs.cpio -append "root=/dev/sdb console=ttyS0 nokaslr" --nographic -s -m 2G -fsdev local,id=shared_test_dev,path=/home/riteshh/work/fswork/qemu/host_shared/,security_model=none -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared -netdev user,id=ethernet.0 -device e1000,netdev=ethernet.0 -S
 
+# configurations needed for above in rootfs, put below in output/target/etc/init.d/rcS file
+1. ip link set eth0 up
+2. chmod +x /etc/udhcp/simple.script
+3. udhcpc -i eth0 -s /etc/udhcp/simple.script
+FYI - (above simple.script file needs to be copied from https://git.busybox.net/busybox/tree/examples/udhcp/simple.script)
+
 
 ## qemu cmd
 (1 cpu)
