@@ -1,0 +1,296 @@
+Hello All, 
+
+This are ilock patches which helps improve the current inode lock scalabiliy
+problem in ext4 mixed read/write workload case. The problem was first
+reported by Joseph [1]. These patches are based upon upstream discussion
+with Jan Kara & Joseph [2]. 
+
+Since these patches introduce ext4_ilock/unlock API for inode locking/
+unlocking in shared v/s exclusive mode to help achieve better
+scalability, it was better to take care of inode_trylock for RWF_NOWAIT case
+in the same patch set. Discussion about this can be found here [3].
+Please let me know if otherwise.
+
+At last these patches are based on the top of ext4 iomap for DIO patches by
+Matthew [4].
+
+Now, since this is a very interesting scalability problem w.r.t locking,
+I thought of collecting a comprehensive set of performance numbers for
+mixed random read/write workload w.r.t number of threads (ext4).
+This commit msg will present a performance benefit histogram using this
+patch set v/s vanilla kernel (v5.3-rc5).
+
+Background
+==========
+
+dioread_nolock feature in ext4, is to allow multiple reads in parallel.
+Also, in case of overwrites DIO since there is no block allocation needed,
+those I/Os too can run in parallel. This gives a good scalable I/O
+performance w.r.t multiple read/writes threads.
+In case of buffer write with dioread_nolock feature, ext4 will allocate
+uninitialized extent and once the IO is completed will convert it back
+to initialized.
+
+But recently DIO reads got changed to be under shared inode rwsem.
+It did allow parallel IO reads to work fine, but this degraded the mixed
+DIO read/write workload 
+[commit 16c54688592c ("ext4: Allow parallel DIO reads").]
+
+
+Problem description
+===================
+
+Currently in DIO writes case, we start with an exclusive inode rwsem
+and only once we know that it is a overwrite (with dioread_nolock),
+we demote it to shared lock. Now with mixed DIO reads & writes, this
+has a scalability problem. Which is, if we have any ongoing DIO reads,
+then DIO writes (since it starts with exclusive) has to wait until the
+shared lock is released (which only happens when DIO read is completed).
+
+
+Implementation
+==============
+
+To fix this, we start with a shared lock (unless an exclusive lock is needed
+in certain cases e.g. extending/unaligned writes). Then if it is a overwrite
+we continue with shared lock, if not then we release the shared lock and
+switch to exclusive lock and re-do certain checks again.
+
+This approach help in achieving good scalablity for mixed DIO read/writes
+worloads [5-6].
+
+Performance results
+===================
+
+The performance numbers are collected using fio tool with dioread_nolock
+mount option for DIO mixed random read/write worload with 4K & 1M burst
+sizes for increasing number of threads (1, 2, 4, 8, 12, 16, 24).
+The performance historgram shown below is the percentage increase in
+performance by using this ilock patchset as compared to vanilla kernel
+(v5.3-rc5).
+
+To check absolute score comparison with some colorful graphs, refer [5-6].
+
+
+With dioread_nolock mount option
+================================
+
+Below shows the performance benefit hist with this ilock patchset in (%)
+w.r.t vanilla kernel(v5.3-rc5) with dioread_nolock mount option for
+mixed randrw workload (for 4K block size).
+If we notice, the percentage benefit increases with increasing number of
+threads. So this patchset help achieve good scalability.
+Absolute graph comparison can be seen here - [5]
+
+
+        Performance benefit (%) data randrw (read)-4K
+  80 +-+------+--------+-------+--------+--------+--------+-------+------+-+   
+     |        +        +       +        +        +        +       +        |   
+  70 +-+                                                           **    +-+   
+     |                                                    **       **      |   
+  60 +-+                                          **      **       **    +-+   
+     |                                            **      **       **      |   
+  50 +-+                                 **       **      **       **    +-+   
+     |                                   **       **      **       **      |   
+  40 +-+                                 **       **      **       **    +-+   
+  30 +-+                        **       **       **      **       **    +-+   
+     |                          **       **       **      **       **      |   
+  20 +-+                        **       **       **      **       **    +-+   
+     |                          **       **       **      **       **      |   
+  10 +-+               **       **       **       **      **       **    +-+   
+     |         **      **       **       **       **      **       **      |   
+   0 +-+       **      **       **       **       **      **       **    +-+   
+     |        +        +       +        +        +        +       +        |   
+ -10 +-+------+--------+-------+--------+--------+--------+-------+------+-+   
+             1,       2,      4,       8,       12,      16,     24,           
+                                 No. of threads                                
+                                                                               
+
+
+        Performance benefit (%) data randrw (write)-4K                           
+  80 +-+------+--------+-------+--------+--------+--------+-------+------+-+   
+     |        +        +       +        +        +        +       +        |   
+  70 +-+                                                           **    +-+   
+     |                                                    **       **      |   
+  60 +-+                                          **      **       **    +-+   
+     |                                            **      **       **      |   
+  50 +-+                                 **       **      **       **    +-+   
+     |                                   **       **      **       **      |   
+  40 +-+                                 **       **      **       **    +-+   
+  30 +-+                        **       **       **      **       **    +-+   
+     |                          **       **       **      **       **      |   
+  20 +-+                        **       **       **      **       **    +-+   
+     |                          **       **       **      **       **      |   
+  10 +-+                        **       **       **      **       **    +-+   
+     |         **      **       **       **       **      **       **      |   
+   0 +-+       **      **       **       **       **      **       **    +-+   
+     |        +        +       +        +        +        +       +        |   
+ -10 +-+------+--------+-------+--------+--------+--------+-------+------+-+   
+             1,       2,      4,       8,       12,      16,     24,           
+                                 No. of threads                                
+
+
+Below shows the performance benefit hist with this ilock patchset in (%)
+w.r.t vanilla kernel (v5.3-rc5) with dioread_nolock mount option for
+mixed randrw workload (for 1M burst size). This shows upto ~20% perf improve-
+ment in 24 threads workload.
+Absolute graph comparison can be seen here - [6]
+
+	Performance benefit (%) data randrw (read)-1M                         
+  25 +-+------+--------+-------+--------+--------+--------+-------+------+-+   
+     |        +        +       +        +        +        +       +        |   
+     |                                                             **      |   
+  20 +-+                                                           **    +-+   
+     |                                                             **      |   
+     |                                                             **      |   
+  15 +-+                                                           **    +-+   
+     |                                   **               **       **      |   
+  10 +-+                                 **               **       **    +-+   
+     |                                   **       **      **       **      |   
+     |                                   **       **      **       **      |   
+   5 +-+                                 **       **      **       **    +-+   
+     |                                   **       **      **       **      |   
+     |                 **       **       **       **      **       **      |   
+   0 +-+       **      **       **       **       **      **       **    +-+   
+     |         **                                                          |   
+     |        +        +       +        +        +        +       +        |   
+  -5 +-+------+--------+-------+--------+--------+--------+-------+------+-+   
+             1,       2,      4,       8,       12,      16,     24,           
+                                 No. of threads                                
+                                                                               
+        Performance benefit (%) data randrw (write)-1M                         
+  25 +-+------+--------+-------+--------+--------+--------+-------+------+-+   
+     |        +        +       +        +        +        +       +        |   
+     |                                                                     |   
+  20 +-+                                                           **    +-+   
+     |                                                             **      |   
+     |                                                             **      |   
+  15 +-+                                                           **    +-+   
+     |                                                    **       **      |   
+  10 +-+                                 **               **       **    +-+   
+     |                                   **       **      **       **      |   
+     |                                   **       **      **       **      |   
+   5 +-+                                 **       **      **       **    +-+   
+     |                          **       **       **      **       **      |   
+     |                 **       **       **       **      **       **      |   
+   0 +-+       **      **       **       **       **      **       **    +-+   
+     |         **                                                          |   
+     |        +        +       +        +        +        +       +        |   
+  -5 +-+------+--------+-------+--------+--------+--------+-------+------+-+   
+             1,       2,      4,       8,       12,      16,     24,           
+                                 No. of threads                                
+
+
+Without dioread_nolock mount option
+===================================
+
+I do see a little degradation without this mount option, but as per my performance
+runs, this is within ~(-0.5 to -3)% limit. With 1M burst size, difference is even
+better in some runs. So, ~(-3 to 3)% deviation is something which could be called
+a run-to-run variation mostly. But for completeness sake I still present
+the below data collected.
+
+        Performance(%) data randrw (read)-4K
+  3 +-+------+--------+--------+--------+-------+--------+--------+------+-+   
+    |        +        +        +        +       +        +        +        |   
+    |                                                                      |   
+  2 +-+                                                                  +-+   
+    |                                                                      |   
+    |                                                                      |   
+  1 +-+                                                                  +-+   
+    |                                                                      |   
+  0 +-+       **       **       **      **       **       **       **    +-+   
+    |         **       **       **      **       **       **       **      |   
+    |         **       **       **      **       **       **       **      |   
+ -1 +-+                **       **      **       **       **       **    +-+   
+    |                  **       **      **       **       **               |   
+    |                  **       **      **       **       **               |   
+ -2 +-+                **       **      **       **       **             +-+   
+    |                           **      **       **       **               |   
+    |        +        +        +**      **      +**      +        +        |   
+ -3 +-+------+--------+--------+--------+-------+--------+--------+------+-+   
+            1,       2,       4,       8,      12,      16,      24,           
+                                No. of threads                                 
+                                                                               
+                                                                               
+        Performance(%) data randrw (write)-4K                             
+  3 +-+------+--------+--------+--------+-------+--------+--------+------+-+   
+    |        +        +        +        +       +        +        +        |   
+    |                                                                      |   
+  2 +-+                                                                  +-+   
+    |                                                                      |   
+    |                                                                      |   
+  1 +-+                                                                  +-+   
+    |                                                                      |   
+  0 +-+       **       **       **      **       **       **       **    +-+   
+    |         **       **       **      **       **       **       **      |   
+    |         **       **       **      **       **       **       **      |   
+ -1 +-+                **       **      **       **       **       **    +-+   
+    |                  **       **      **       **       **               |   
+    |                  **       **      **       **       **               |   
+ -2 +-+                **       **      **       **       **             +-+   
+    |                           **      **       **       **               |   
+    |        +        +        +**      +       +        +        +        |   
+ -3 +-+------+--------+--------+--------+-------+--------+--------+------+-+   
+            1,       2,       4,       8,      12,      16,      24,           
+                                No. of threads                                 
+
+
+
+        Performance(%) data randrw (read)-1M
+  3 +-+------+--------+--------+--------+-------+--------+--------+------+-+   
+    |        +        +        +        +       +        +        +        |   
+    |                                                                      |   
+  2 +-+       **                                                         +-+   
+    |         **                                                   **      |   
+    |         **                                 **                **      |   
+  1 +-+       **       **                        **                **    +-+   
+    |         **       **                        **                **      |   
+  0 +-+       **       **       **      **       **       **       **    +-+   
+    |                           **      **                **               |   
+    |                           **      **                                 |   
+ -1 +-+                         **                                       +-+   
+    |                           **                                         |   
+    |                                                                      |   
+ -2 +-+                                                                  +-+   
+    |                                                                      |   
+    |        +        +        +        +       +        +        +        |   
+ -3 +-+------+--------+--------+--------+-------+--------+--------+------+-+   
+            1,       2,       4,       8,      12,      16,      24,           
+                                No. of threads                                 
+                                                                               
+                                                                               
+        Performance(%) data randrw (write)-1M
+  3 +-+------+--------+--------+--------+-------+--------+--------+------+-+   
+    |        +        +        +        +       +        +        +**      |   
+    |                                                              **      |   
+  2 +-+       **                                                   **    +-+   
+    |         **                                                   **      |   
+    |         **                                 **                **      |   
+  1 +-+       **       **                        **       **       **    +-+   
+    |         **       **                        **       **       **      |   
+  0 +-+       **       **       **      **       **       **       **    +-+   
+    |                           **      **                                 |   
+    |                           **      **                                 |   
+ -1 +-+                         **                                       +-+   
+    |                           **                                         |   
+    |                                                                      |   
+ -2 +-+                                                                  +-+   
+    |                                                                      |   
+    |        +        +        +        +       +        +        +        |   
+ -3 +-+------+--------+--------+--------+-------+--------+--------+------+-+   
+            1,       2,       4,       8,      12,      16,      24,           
+                                No. of threads                                 
+                                                                              
+
+Git tree - https://github.com/riteshharjani/linux/tree/ext4-ilock-RFC
+
+References
+==========
+[1]: https://lore.kernel.org/linux-ext4/1566871552-60946-4-git-send-email-joseph.qi@linux.alibaba.com/
+[2]: https://lore.kernel.org/linux-ext4/20190910215720.GA7561@quack2.suse.cz/
+[3]: https://lore.kernel.org/linux-fsdevel/20190911103117.E32C34C044@d06av22.portsmouth.uk.ibm.com/
+[4]: https://lwn.net/Articles/799184/
+
+[5]: https://raw.githubusercontent.com/riteshharjani/LinuxStudy/master/ext4/fio-output/vanilla-vs-ilocknew-randrw-dioread-nolock-4K.png
+[6]: https://raw.githubusercontent.com/riteshharjani/LinuxStudy/master/ext4/fio-output/vanilla-vs-ilocknew-randrw-dioread-nolock-1M.png

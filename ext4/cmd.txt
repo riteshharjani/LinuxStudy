@@ -1,0 +1,3 @@
+plot 'fio-output/v5-rc5/nomount/fiofiles/randrw/run_1M/op.txt' using 1:2 with linespoints title 'vanilla(nodioread-randrw(read))-1M', 'fio-output/v5-rc5/nomount/fiofiles/randrw/run_1M/op.txt' using 1:3 with linespoints title 'vanilla(nodioread-randrw(write))-1M', 'fio-output/ilocknew/nomount/fiofiles/randrw/run_1M/op.txt' using 1:2 with linespoints title 'ilocknew(nodioread-randrw(read))-1M', 'fio-output/ilocknew/nomount/fiofiles/randrw/run_1M/op.txt' using 1:3 with linespoints title 'ilocknew(nodioread-randrw(write))-1M'
+
+

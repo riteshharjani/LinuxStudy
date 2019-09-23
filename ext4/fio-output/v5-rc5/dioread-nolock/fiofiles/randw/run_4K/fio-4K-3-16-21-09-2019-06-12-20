@@ -1,0 +1,31 @@
+fio-run: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+fio-3.12
+Starting 16 threads
+
+fio-run: (groupid=0, jobs=16): err= 0: pid=7226: Sat Sep 21 06:48:33 2019
+  write: IOPS=420, BW=1682KiB/s (1722kB/s)(197MiB/120065msec); 0 zone resets
+    clat (usec): min=1561, max=543866, avg=38032.59, stdev=42595.99
+     lat (usec): min=1562, max=543867, avg=38033.59, stdev=42595.99
+    clat percentiles (msec):
+     |  1.00th=[    4],  5.00th=[    5], 10.00th=[    6], 20.00th=[    9],
+     | 30.00th=[   12], 40.00th=[   17], 50.00th=[   23], 60.00th=[   31],
+     | 70.00th=[   43], 80.00th=[   59], 90.00th=[   92], 95.00th=[  126],
+     | 99.00th=[  203], 99.50th=[  239], 99.90th=[  313], 99.95th=[  355],
+     | 99.99th=[  430]
+   bw (  KiB/s): min=   15, max=  240, per=6.25%, avg=105.05, stdev=32.99, samples=3840
+   iops        : min=    3, max=   60, avg=26.20, stdev= 8.25, samples=3840
+  lat (msec)   : 2=0.01%, 4=4.11%, 10=20.78%, 20=21.36%, 50=28.94%
+  lat (msec)   : 100=16.41%, 250=8.02%, 500=0.37%, 750=0.01%
+  cpu          : usr=0.05%, sys=0.17%, ctx=50919, majf=0, minf=0
+  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     issued rwts: total=0,50482,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=1
+
+Run status group 0 (all jobs):
+  WRITE: bw=1682KiB/s (1722kB/s), 1682KiB/s-1682KiB/s (1722kB/s-1722kB/s), io=197MiB (207MB), run=120065-120065msec
+
+Disk stats (read/write):
+  sda: ios=0/50477, merge=0/28, ticks=0/1928880, in_queue=1828628, util=90.19%
