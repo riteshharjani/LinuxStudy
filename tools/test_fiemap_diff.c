@@ -74,6 +74,8 @@ int run_fiemap(int fd, int blocksize)
 	char *fiebuf;
 	int ret;
 
+	printf("\n\n=========Testing IOCTL FIEMAP=========\n\n");
+
 	fiebuf = malloc(sizeof(struct fiemap) + (blocks_to_map * sizeof(struct fiemap_extent)));
 	if (!fiebuf) {
 		printf("malloc failed\n");
@@ -106,6 +108,32 @@ int run_fiemap(int fd, int blocksize)
 	return 0;
 }
 
+void run_bmap(int fd, int blocksize)
+{
+	int blkcnt, i, block;
+	struct stat st;
+
+	if (fstat(fd, &st)) {
+		perror("fstat failed\n");
+		exit(1);
+	}
+
+	printf("\n\n=========Testing IOCTL FIBMAP=========\n\n");
+
+	blkcnt = (st.st_size + blocksize - 1) / blocksize;
+	printf("File size = %d, blkcnt = %d, blocksize = %d\n",
+		st.st_size, blkcnt, blocksize);
+
+	for (i = 0; i < blkcnt; i++) {
+		block = i;
+		if (ioctl(fd, FIBMAP, &block)) {
+			perror("ioctl fibmap failed\n");
+			exit(1);
+		}
+		printf("%3d %10d\n", i, block);
+	}
+}
+
 int main()
 {
 	int fd;
@@ -129,6 +157,7 @@ int main()
 	}
 
 	run_fiemap(fd, blocksize);
+	run_bmap(fd, blocksize);
 	close(fd);
 	return 0;
 
