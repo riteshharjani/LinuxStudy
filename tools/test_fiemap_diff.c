@@ -142,7 +142,7 @@ create a file with below cmds.
 3. check extent mapping:- xfs_io -c "fiemap -v" testfile.txt
 4. run this binary on with and without iomap patches:- ./a.out 
 
-Withought patch:-
+Without patch:-
 ================
 riteshh-> ./a.out 
 logical: [       0..      15] phys: 332211376..332211391 flags: 0x800 tot: 16
