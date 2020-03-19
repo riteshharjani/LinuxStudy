@@ -16,15 +16,15 @@ sudo debootstrap --arch amd64 jessie $DIR
 sudo umount $DIR
 rmdir $DIR
 
-### To install Ubuntu on qemu on a remote machine:-
-# on remote machine - 
+# To install Ubuntu on qemu on a remote machine:-
+#### on remote machine - 
 qemu-system-x86_64 -enable-kvm -m 50g -smp 4 -boot c -cdrom /root/iso/debian-testing-amd64-DVD-1.iso -drive file=/root/guest-images/root.img,if=virtio -s -netdev user,id=eth\
 ernet.0,hostfwd=tcp::12123-:22 -device e1000,netdev=ethernet.0 -vnc ':0'
 
-# on local laptop
+#### on local laptop
 ssh -L5900:localhost:5900 <remote machine>
 
-# on local laptop
+#### on local laptop
 vncviewer <remote machine> :5900
 
   ### References:-
