@@ -22,12 +22,14 @@
 #include <linux/types.h>                           
 #include <linux/fiemap.h>    
 #include <pthread.h>
-                                          
+
 struct thread_s {
 	int id;
 };
 
 unsigned long fsize = 2.5 * 1024 * 1024;
+
+pthread_barrier_t bar;
 
 void run_func(int id)
 {                                   
@@ -35,6 +37,7 @@ void run_func(int id)
 	char fname[255] = {0};
 	char *addr;
 
+	pthread_barrier_wait(&bar);
 	sprintf(fname, "mmap-file-%d", id);
 	printf("Test write phase starting file %s\n", fname);
 
@@ -74,14 +77,21 @@ void *thread_func(void *arg)
 void _run_test(int threads)
 {
 	pthread_t tid[threads];
+
+	pthread_barrier_init(&bar, NULL, threads+1);
 	for (int i = 0; i < threads; i++) {
 		struct thread_s *thread_info = (struct thread_s *) malloc(sizeof(struct thread_s));
 		thread_info->id = i;
 		assert(pthread_create(&tid[i], NULL, thread_func, thread_info) == 0);
 	}
+
+	pthread_barrier_wait(&bar);
+
 	for (int i = 0; i <threads; i++) {
 		assert(pthread_join(tid[i], NULL) == 0);
 	}
+
+	pthread_barrier_destroy(&bar);
 	return;
 }
 
