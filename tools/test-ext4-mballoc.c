@@ -48,6 +48,7 @@ void run_func(int id)
         }                                                                 
 
 	assert(ftruncate(fd, fsize) == 0);    
+//	assert(fallocate(fd, 0, 0, fsize) == 0);    
                       
         addr = mmap(NULL, fsize, PROT_WRITE, MAP_SHARED, fd, 0);
         assert(addr != MAP_FAILED);
@@ -56,8 +57,8 @@ void run_func(int id)
 		addr[i] = 0xAB;
 	}
 
-	msync(addr, fsize, MS_SYNC);
-	fsync(fd);
+//	msync(addr, fsize, MS_SYNC);
+//	fsync(fd);
         assert(munmap(addr, fsize) != -1);
         close(fd);
 	printf("Test write phase completed...\n");
@@ -99,17 +100,21 @@ int main(int argc, char *argv[])
 {
 	int opt;
 	int threads;
-	while ((opt = getopt(argc, argv, ":t:")) != -1) {
+	while ((opt = getopt(argc, argv, ":t:s:")) != -1) {
 		switch(opt) {
 		case 't':
 			threads = atoi(optarg);
 			printf("Testing with (%d) threads\n", threads);
-			_run_test(threads);
+			break;
+		case 's':
+			fsize = atoi(optarg);
+			printf("size: %lu Bytes\n", fsize);
 			break;
 		case '?':
 			printf("unknown option passed\n");
 			break;
 		}
 	}
+	_run_test(threads);
         return 0;
 }
