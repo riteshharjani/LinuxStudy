@@ -1,0 +1,29 @@
+#!/usr/bin/python
+
+import argparse
+import sys
+from gen_results_summary import get_property, gen_results_summary, gen_jenkins_report, get_results
+from junitparser import JUnitXml, Property, Properties, Failure, Error, Skipped
+
+def jenkins_report(out_file, results_dir, name="Aggregated test resuls"):
+    testsuites = JUnitXml(name)
+
+    for filename in get_results(results_dir):
+        testsuite = JUnitXml.fromfile(filename)
+        test_name = get_property(testsuite.properties(), "TESTCFG")
+        testsuite.name += "-" + test_name
+        for testcase in testsuite:
+            testcase.classname += "-" + test_name
+        testsuites.add_testsuite(testsuite)
+        testsuites.write(out_file, pretty=False)
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('results_dir', help='Results directory to process')
+    parser.add_argument('output_file', help='Jenkins JUnitXml combined output file')
+    args = parser.parse_args()
+
+    jenkins_report(args.output_file, args.results_dir)
+
+if __name__ == "__main__":
+    main()
