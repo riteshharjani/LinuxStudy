@@ -1,0 +1,113 @@
+
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.049  000.049: --- VIM STARTING ---
+000.733  000.684: Allocated generic buffers
+002.366  001.633: locale set
+002.395  000.029: window checked
+006.020  003.625: inits 1
+006.131  000.111: parsing arguments
+006.136  000.005: expanding arguments
+006.299  000.163: shell init
+009.658  003.359: Termcap init
+009.774  000.116: inits 2
+010.798  001.024: init highlight
+028.148  007.084  007.084: sourcing /usr/share/vim/vim82/syntax/syncolor.vim
+029.039  009.896  002.812: sourcing /usr/share/vim/vim82/syntax/synload.vim
+078.312  000.257  000.257: sourcing /usr/share/vim/vimfiles/ftdetect/stp.vim
+080.251  000.133  000.133: sourcing /usr/share/vim/vimfiles/after/ftdetect/varlink.vim
+080.892  049.974  049.584: sourcing /usr/share/vim/vim82/filetype.vim
+081.155  063.926  004.056: sourcing /usr/share/vim/vim82/syntax/syntax.vim
+082.926  000.157  000.157: sourcing /usr/share/vim/vim82/filetype.vim
+084.957  000.347  000.347: sourcing /usr/share/vim/vim82/ftplugin.vim
+085.550  073.273  008.843: sourcing /etc/vimrc
+093.427  002.186  002.186: sourcing /usr/share/vim/vim82/syntax/nosyntax.vim
+098.433  001.290  001.290: sourcing /usr/share/vim/vim82/syntax/syncolor.vim
+099.282  004.065  002.775: sourcing /usr/share/vim/vim82/syntax/synload.vim
+099.533  010.110  003.859: sourcing /usr/share/vim/vim82/syntax/syntax.vim
+107.865  002.628  002.628: sourcing /usr/share/vim/vim82/ftoff.vim
+122.836  011.210  011.210: sourcing /home/riteshh/.vim/autoload/plug.vim
+194.179  000.160  000.160: sourcing /home/riteshh/.vim/plugged/vim-fugitive/ftdetect/fugitive.vim
+196.871  000.227  000.227: sourcing /usr/share/vim/vimfiles/ftdetect/stp.vim
+198.848  000.134  000.134: sourcing /usr/share/vim/vimfiles/after/ftdetect/varlink.vim
+199.537  048.202  047.681: sourcing /usr/share/vim/vim82/filetype.vim
+201.902  000.128  000.128: sourcing /usr/share/vim/vim82/ftplugin.vim
+204.586  000.384  000.384: sourcing /usr/share/vim/vim82/indent.vim
+207.329  000.132  000.132: sourcing /usr/share/vim/vim82/filetype.vim
+209.830  000.165  000.165: sourcing /usr/share/vim/vim82/ftplugin.vim
+218.197  002.505  002.505: sourcing /usr/share/vim/vim82/syntax/syncolor.vim
+225.490  002.436  002.436: sourcing /usr/share/vim/vim82/syntax/syncolor.vim
+232.038  002.396  002.396: sourcing /usr/share/vim/vim82/syntax/syncolor.vim
+235.678  023.066  015.729: sourcing /usr/share/vim/vim82/colors/desert.vim
+236.531  133.631  047.716: sourcing /home/riteshh/.vimrc.bundles
+239.283  000.156  000.156: sourcing /usr/share/vim/vim82/filetype.vim
+242.214  000.149  000.149: sourcing /usr/share/vim/vim82/ftplugin.vim
+245.381  000.131  000.131: sourcing /usr/share/vim/vim82/indent.vim
+252.803  001.306  001.306: sourcing /usr/share/vim/vim82/syntax/syncolor.vim
+257.038  001.311  001.311: sourcing /usr/share/vim/vim82/syntax/syncolor.vim
+258.702  010.514  007.897: sourcing /usr/share/vim/vim82/colors/desert.vim
+263.069  001.317  001.317: sourcing /usr/share/vim/vim82/syntax/syncolor.vim
+267.319  001.673  001.673: sourcing /home/riteshh/.vim/plug-config/whickey.vim
+272.193  003.248  003.248: sourcing /home/riteshh/.vim/plug-config/coc.vim
+275.188  001.416  001.416: sourcing /home/riteshh/.vim/plug-config/fzf.vim
+277.036  000.277  000.277: sourcing /home/riteshh/.vim/plug-config/vimwiki.vim
+277.120  190.049  027.427: sourcing $HOME/.vimrc
+277.138  003.018: sourcing vimrc file(s)
+280.349  000.812  000.812: sourcing /home/riteshh/.vim/plugged/cscope-maps/plugin/cscope_maps.vim
+287.799  002.079  002.079: sourcing /usr/share/vim/vim82/syntax/nosyntax.vim
+294.386  001.509  001.509: sourcing /usr/share/vim/vim82/syntax/syncolor.vim
+295.250  005.127  003.618: sourcing /usr/share/vim/vim82/syntax/synload.vim
+295.493  011.491  004.285: sourcing /usr/share/vim/vim82/syntax/syntax.vim
+319.586  037.373  025.882: sourcing /home/riteshh/.vim/plugged/highlight.vim/plugin/highlight.vim
+334.226  012.503  012.503: sourcing /home/riteshh/.vim/plugged/vim-fugitive/plugin/fugitive.vim
+337.797  001.557  001.557: sourcing /home/riteshh/.vim/plugged/lightline.vim/plugin/lightline.vim
+347.767  002.572  002.572: sourcing /home/riteshh/.vim/plugged/vim-powerline/plugin/Powerline.vim
+350.123  000.553  000.553: sourcing /home/riteshh/.vim/plugged/tmuxline.vim/plugin/tmuxline.vim
+355.906  003.976  003.976: sourcing /home/riteshh/.vim/plugged/taglist.vim/plugin/taglist.vim
+363.843  006.243  006.243: sourcing /home/riteshh/.fzf/plugin/fzf.vim
+372.241  006.605  006.605: sourcing /home/riteshh/.vim/plugged/fzf.vim/plugin/fzf.vim
+377.092  003.003  003.003: sourcing /home/riteshh/.vim/plugged/vim-floaterm/plugin/floaterm.vim
+379.964  000.988  000.988: sourcing /home/riteshh/.vim/plugged/vim-which-key/plugin/which_key.vim
+388.243  003.172  003.172: sourcing /home/riteshh/.vim/plugged/vimwiki/autoload/vimwiki/vars.vim
+401.836  000.841  000.841: sourcing /home/riteshh/.vim/plugged/vimwiki/autoload/vimwiki/u.vim
+422.279  040.515  036.502: sourcing /home/riteshh/.vim/plugged/vimwiki/plugin/vimwiki.vim
+428.191  000.827  000.827: sourcing /home/riteshh/.vim/plugged/coc.nvim/autoload/coc/rpc.vim
+434.659  004.069  004.069: sourcing /home/riteshh/.vim/plugged/coc.nvim/autoload/coc/util.vim
+441.089  001.714  001.714: sourcing /home/riteshh/.vim/plugged/coc.nvim/autoload/coc/client.vim
+471.134  046.821  040.211: sourcing /home/riteshh/.vim/plugged/coc.nvim/plugin/coc.vim
+473.868  000.335  000.335: sourcing /home/riteshh/.vim/plugged/vim-snippets/plugin/vimsnippets.vim
+504.250  028.123  028.123: sourcing /usr/share/vim/vimfiles/plugin/cctree.vim
+506.401  000.170  000.170: sourcing /usr/share/vim/vimfiles/plugin/fzf.vim
+510.722  000.833  000.833: sourcing /usr/share/vim/vim82/plugin/getscriptPlugin.vim
+514.463  002.148  002.148: sourcing /usr/share/vim/vim82/plugin/gzip.vim
+517.912  001.929  001.929: sourcing /usr/share/vim/vim82/plugin/logiPat.vim
+519.537  000.294  000.294: sourcing /usr/share/vim/vim82/plugin/manpager.vim
+522.911  001.834  001.834: sourcing /usr/share/vim/vim82/plugin/matchparen.vim
+529.703  005.051  005.051: sourcing /usr/share/vim/vim82/plugin/netrwPlugin.vim
+531.403  000.148  000.148: sourcing /usr/share/vim/vim82/plugin/rrhelper.vim
+533.546  000.484  000.484: sourcing /usr/share/vim/vim82/plugin/spellfile.vim
+536.888  001.824  001.824: sourcing /usr/share/vim/vim82/plugin/tarPlugin.vim
+539.244  000.874  000.874: sourcing /usr/share/vim/vim82/plugin/tohtml.vim
+542.556  001.910  001.910: sourcing /usr/share/vim/vim82/plugin/vimballPlugin.vim
+546.185  002.056  002.056: sourcing /usr/share/vim/vim82/plugin/zipPlugin.vim
+546.252  057.580: loading plugins
+546.860  000.608: loading packages
+551.786  000.742  000.742: sourcing /home/riteshh/.vim/plugged/vim/autoload/dracula.vim
+551.916  003.008  002.266: sourcing /home/riteshh/.vim/plugged/vim/after/plugin/dracula.vim
+552.080  002.212: loading after plugins
+552.186  000.106: inits 3
+554.633  002.447: reading viminfo
+554.733  000.100: setting raw mode
+554.763  000.030: start termcap
+555.009  000.246: clearing screen
+561.915  006.906: opening buffers
+567.296  003.213  003.213: sourcing /home/riteshh/.vim/plugged/lightline.vim/autoload/lightline.vim
+573.324  000.496  000.496: sourcing /home/riteshh/.vim/plugged/lightline.vim/autoload/lightline/tab.vim
+582.186  001.610  001.610: sourcing /home/riteshh/.vim/plugged/lightline.vim/autoload/lightline/colorscheme.vim
+601.800  023.760  022.150: sourcing /home/riteshh/.vim/plugged/lightline.vim/autoload/lightline/colorscheme/powerline.vim
+601.883  025.949  002.189: sourcing /home/riteshh/.vim/plugged/lightline.vim/autoload/lightline/colorscheme/default.vim
+633.814  042.241: BufEnter autocommands
+633.830  000.016: editing files in windows

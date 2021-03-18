@@ -25,7 +25,7 @@ public class Order
 <details open>
 <summary> perf cmds </summary>
 
-```shell
+```c
 ##Setting probe
 ## Note that kernel vmlinux is already copied to /boot/vmlinux
 # -a is for add event, Use -f is to force
